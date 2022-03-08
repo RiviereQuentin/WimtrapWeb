@@ -1,0 +1,171 @@
+
+show_modal_spinner(spin = "cube-grid",
+                   color = "#428bca",
+                   text = "Please wait...")
+
+if (input$checkc1) {
+  print("Alexandra")
+  if (is.null(input$organismb)){
+    predictiveModel <- Wimtrap_model2
+    bed_data <- reactiveValuesToList(input)
+    bed_data <-
+      bed_data[grep(pattern = "bed", x = names(bed_data))]
+    bed_data <- unlist(bed_data)
+    genomic_data.carepat <- as.character(input$filesData$datapath)
+    names(genomic_data.carepat) <- bed_data
+    imported_genomic_data2 <- Wimtrap::importGenomicData(
+      biomart = FALSE,
+      genomic_data = genomic_data.carepat,
+      tss = as.character(input$tss$datapath),
+      tts = as.character(input$tts$datapath),
+      promoter_length = as.numeric(input$promoter),
+      proximal_length = as.numeric(input$proximal),
+      downstream_length = as.numeric(input$downstream)
+    )
+    genome2 <- input$genome$datapath
+  } else {
+    predictiveModel <- Wimtrap_model2
+    bed_data <- reactiveValuesToList(input)
+    bed_data <-
+      bed_data[grep(pattern = "bed", x = names(bed_data))]
+    bed_data <- unlist(bed_data)
+    genomic_data.carepat <- as.character(input$filesData$datapath)
+    names(genomic_data.carepat) <- bed_data
+    imported_genomic_data2 <- tryCatch(
+      Wimtrap::importGenomicData(organism = as.character(input$organismb),
+                                 genomic_data = genomic_data.carepat,
+                                 promoter_length = as.numeric(input$promoterb),
+                                 downstream_length = as.numeric(input$downstreamb),
+                                 proximal_length = as.numeric(input$proximalb)),
+      error = function(e){return(NA)},
+      finally = message("Interrogating Ensembl and Biomart..."))
+    if(is.na(imported_genomic_data2)){
+      imported_genomic_data2 <- 
+        Wimtrap::importGenomicData(organism = as.character(input$organismb),
+                                   genomic_data = genomic_data.carepat,
+                                   promoter_length = as.numeric(input$promoterb),
+                                   downstream_length = as.numeric(input$downstreamb),
+                                   proximal_length = as.numeric(input$proximalb))
+    }
+  }
+} else { 
+  if (input$checkc2){
+    genomicFeatures <-
+      unlist(strsplit(x = as.character(PredFeaturesc()), split = "The predictive features are: "))
+    genomicFeatures <-
+      unlist(strsplit(x = genomicFeatures, split = ", "))
+    genomicData <- reactiveValuesToList(input)
+    genomicData <-
+      genomicData[paste0("bdc", seq(0, (length(
+        genomicFeatures
+      ) - 1)))]
+    names(genomicData) <- genomicFeatures
+    if (length((names(genomicData) %in% c("Promoter", "Downstream", "ProximalPromoter",
+                                          "CDS", "X5UTR", "X3UTR", "Intron"))) > 0){
+      genomicData <-
+        genomicData[!(names(genomicData) %in% c("Promoter", "Downstream", "ProximalPromoter",
+                                                "CDS", "X5UTR", "X3UTR", "Intron"))]
+    } else {
+      
+    }
+    genomicFeatures <- names(genomicData)
+    genomicData <- do.call(rbind, genomicData)
+    genomicData <- genomicData$datapath
+    names(genomicData) <- genomicFeatures
+    imported_genomic_data2 <- tryCatch(
+      Wimtrap::importGenomicData(organism = as.character(input$organismc),
+                                 genomic_data = genomicData,
+                                 promoter_length = as.numeric(input$promoterc),
+                                 proximal_length = as.numeric(input$proximalc),
+                                 downstream_length = as.numeric(input$downstreamc)),
+      error = function(e){return(NA)},
+      finally = message("Interrogating Ensembl and Biomart..."))
+    if(is.na(imported_genomic_data2)){
+      imported_genomic_data2 <- 
+        Wimtrap::importGenomicData(organism = as.character(input$organismc),
+                                   genomic_data = genomicData,
+                                   promoter_length = as.numeric(input$promoterc),
+                                   proximal_length = as.numeric(input$proximalc),
+                                   downstream_length = as.numeric(input$downstreamc)
+        )
+    } else {}
+    
+  } else {
+    genomicFeatures <-
+      unlist(strsplit(x = as.character(PredFeatures()), split = "The predictive features are: "))
+    genomicFeatures <-
+      unlist(strsplit(x = genomicFeatures, split = ", "))
+    genomicData <- reactiveValuesToList(input)
+    genomicData <-
+      genomicData[paste0("bdc", seq(0, (length(
+        genomicFeatures
+      ) - 1)))]
+    names(genomicData) <- genomicFeatures
+    promoterLength <- genomicData[["Promoter"]]
+    downstreamLength <- genomicData[["Downstream"]]
+    proximalLength <- genomicData[["ProximalPromoter"]]
+    genomicData <-
+      genomicData[!(names(genomicData) %in% c("Promoter", "Downstream", "ProximalPromoter"))]
+    genomicFeatures <- names(genomicData)
+    genomicData <- do.call(rbind, genomicData)
+    genomicData <- genomicData$datapath
+    names(genomicData) <- genomicFeatures
+    imported_genomic_data2 <-
+      Wimtrap::importGenomicData(
+        genomic_data = genomicData,
+        biomart = FALSE,
+        promoter_length = promoterLength,
+        downstream_length = downstreamLength,
+        proximal_length = proximalLength,
+        tss = input$tssc$datapath,
+        tts = input$ttsc$datapath
+      )
+    predictiveModel <- get(load(file = input$TFBSmodel$datapath))
+    genome2 <- input$genomec$datapath
+  }
+}
+
+TFnames2 <-
+  gsub(
+    pattern = "\\s",
+    replacement = "",
+    x = as.character(input$motifsc)
+  )
+TFnames2 <- unlist(strsplit(x = TFnames2, split = ","))
+
+if (input$checkc2){
+  TFBSdata2 <- Wimtrap::getTFBSdata(
+    pfm = input$pwmc$datapath,
+    TFnames = TFnames2,
+    organism = input$organismc,
+    imported_genomic_data = imported_genomic_data2
+  )
+  
+} else {
+  if (input$checkc1 & input$biomart){
+    TFBSdata2 <- Wimtrap::getTFBSdata(
+      pfm = input$pwmc$datapath,
+      TFnames = TFnames2,
+      organism = as.character(input$organismb),
+      imported_genomic_data = imported_genomic_data2
+    )
+    
+  } else { 
+    TFBSdata2 <- Wimtrap::getTFBSdata(
+      pfm = input$pwmc$datapath,
+      TFnames = TFnames2,
+      genome_sequence = genome2,
+      imported_genomic_data = imported_genomic_data2
+    )
+  }
+}
+
+results2 <- Wimtrap::predictTFBS(
+  TFBSmodel = predictiveModel,
+  TFBSdata = TFBSdata2,
+  studiedTFs = TFnames2,
+  score_threshold = input$score_thresholdc
+)
+remove_modal_spinner()
+return(results2)
+}

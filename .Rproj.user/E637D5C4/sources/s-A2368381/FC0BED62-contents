@@ -1,0 +1,15 @@
+data1 <- read.delim(file = "C:/Users/qri/Documents/GitHub/carepat/demo/Genomic features/DGF_organism1_condition1_example.bed",
+                    sep = "\t", header = FALSE)
+
+data1 <- data1[-runif(n= 1000, min = 0, max = nrow(data1)),]
+data1$V5 <- rnorm(n = nrow(data1), mean = 0, sd = 1)
+b <- summary(data1$V5)
+data1$V5 <- (data1$V5-b["Min."])/(b["Max."]-b["Min."])
+data1$V5 <- as.integer(as.integer(data1$V5*1000) + 50)
+data1$V5[data1$V5>1000] <- 1000
+selected <- runif(n= 5000, min = 0, max = nrow(data1))
+data1$V2[selected] <- data1$V2[selected] - 10
+data1$V3[selected] <- data1$V3[selected] - 10
+data1 <- data1[order(data1$V1, data1$V2, decreasing = FALSE),]
+write.table(data1, file = "C:/Users/qri/Documents/GitHub/carepat/demo/Genomic features/DGF_organism1_condition2_example.bed",
+            sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
