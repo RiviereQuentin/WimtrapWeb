@@ -536,7 +536,7 @@ mod_AdaptativeSelection_server <- function(id) {
                          color = "#428bca",
                          text = "Please wait...")
       
-      results <- Wimtrap::carepat(
+      results <- PlantCarepat::carepat(
         organism = input$organism,
         condition = input$condition,
         pfm = input$pwm$datapath,
