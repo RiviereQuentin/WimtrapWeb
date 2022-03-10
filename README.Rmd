@@ -2,53 +2,69 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
+  fig.path = "man/figures/README-icon.ico",
   out.width = "100%"
 )
 ```
 
-# PlantCarepat
+# WimtrapWeb
 
-<!-- badges: start -->
-<!-- badges: end -->
+**Wimtrap** is a R shiny application for the prediction of condition-specific transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites by pattern-matching and annotate them with genomic features that characterize their genomic context (opening of the DNA, chromatin marks, DNA conservation, digital genomic footprints,...). Then, the potential TF binding sites likely to be CARE in the condition of interest are selected based on a 'decision rules' model. This model is otained by maching learning using ChIP-seq data as reference.
 
-The goal of PlantCarepat is to ...
+Prebuilt-models and genomic features integrated into the website allow to quickly obtain prediction of CARE and related potential gene targets in 10 different conditions *Arabidopsis thaliana* and 2 different conditions for *Solanum lycopersicum*. Go to the '**Query**' panel to take advantage of these ressources.
+
+The '**Build**' and '**Predict**' panels allow you to build your own models and use them for any other condition and organism.
 
 ## Installation
 
-You can install the released version of PlantCarepat from [CRAN](https://CRAN.R-project.org) with:
+Wimtrap is an R Shiny Application that requires the last version of R (R 4.0.4), BiocManager and remotes to be installed.
+
+In R, type the following lines:
 
 ``` r
-install.packages("PlantCarepat")
+    if(!require("remotes", quietly = TRUE)){  
+        install.packages("remotes")
+        }
+    if(!require("BiocManager", quietly = TRUE)){  
+        install.packages("BiocManager")
+        }
+```
+
+Then, you can enter:
+
+``` r
+  BiocManager::install("RiviereQuentin/WimtrapWeb",                     
+    dependencies = TRUE,                     
+    build_vignettes = TRUE,
+    force = TRUE)
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+To start to use WimtrapWeb, please run the app as follows
 
 ```{r example}
-library(PlantCarepat)
-## basic example code
+library(WimtrapWeb)
+run_app()
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+## More informations
 
-```{r cars}
-summary(cars)
-```
+Please follow the tutorial video to start using WimtrapWeb: ![](https://www.youtube.com/watch?v=6371fN7dkak)
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
+Methodological details are described in the user guide [user guide](https://htmlpreview.github.io/?https://github.com/RiviereQuentin/Wimtrap/blob/main/vignettes/Wimtrap.html) of the cognate Wimtrap R package and in the manual pages of the functions, which can be accessed by entering in R:
 
-You can also embed plots, for example:
+        library(Wimtrap)
+        ?importGenomicData()
+        ?getTFBSdata()
+        ?buildTFBSmodel()
+        ?predictTFBS()
+        ?plotPredictions()
 
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
+## Authors
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+This web-application was developed at the [LPGMP](https://lpgmp.ulb.be/) and [MLG](https://mlg.ulb.ac.be/wordpress) groups of the Université Libre de Bruxelles by Quentin Rivière [qri\@hotmail.be](mailto:qri@hotmail.be), Madalina Ciortan, Massimiliano Corso, Grégoire Noël, Nathalie Verbruggen and Matthieu Defrance [Matthieu.Defrance\@ulb.be](mailto:Matthieu.Defrance@ulb.be).

@@ -27,7 +27,6 @@ usethis::use_package("shinyjs")
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "AdaptativeSelection" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
@@ -36,6 +35,7 @@ golem::add_fct( "plotROC" )
 golem::add_fct( "printConfusionMatrix" )
 golem::add_fct( "plotFeatureImportance" )
 golem::add_fct( "fileInput" )
+golem::add_fct("carepat")
 
 
 
@@ -63,7 +63,7 @@ usethis::use_test( "app" )
 # Documentation
 
 ## Vignette ----
-usethis::use_vignette("PlantCarepat")
+usethis::use_vignette("WimtrapWeb")
 devtools::build_vignettes()
 
 ## Code Coverage----

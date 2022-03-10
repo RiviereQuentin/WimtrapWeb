@@ -40,3 +40,4 @@ golem::add_dockerfile_shinyproxy()
 
 ## If you want to deploy to Heroku
 golem::add_dockerfile_heroku()
+#options(repos = BiocInstaller::biocinstallRepos())

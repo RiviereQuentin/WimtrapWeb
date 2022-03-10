@@ -7,7 +7,7 @@
 #' @noRd
 
 
-data("species_metadata", package = "PlantCarepat")
+data("species_metadata", package = "WimtrapWeb")
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources

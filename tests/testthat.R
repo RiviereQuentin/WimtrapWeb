@@ -1,4 +1,4 @@
 library(testthat)
-library(PlantCarepat)
+library(WimtrapWeb)
 
-test_check("PlantCarepat")
+test_check("WimtrapWeb")

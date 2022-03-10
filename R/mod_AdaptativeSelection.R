@@ -33,13 +33,13 @@ mod_AdaptativeSelection_ui <- function(id) {
                    binding sites likely to be CARE in the condition of interest are selected based on a \'decision rules` model. This model is otained
                    by maching learning using ChIP-seq data as reference.", tags$br(), tags$br(), "Prebuilt-models and genomic features integrated into the website allow to quickly
                    obtain prediction of CARE and related potential gene targets in 10 different conditions for ", tags$i("Arabidopsis thaliana"), " and
-                   2 different condition for ", tags$i("Solanum lycopersicum"), ". Go to the", tags$b("\`Query\`"), " panel to take advantage of these ressources.",
+                   2 different conditions for ", tags$i("Solanum lycopersicum"), ". Go to the", tags$b("\`Query\`"), " panel to take advantage of these ressources.",
                    tags$br(), tags$br(), "The ", tags$b("\`Build\`"), " and ",  tags$b("\`Predict\`"), " panels allow you to build your own models and use them for any other condition and organism"),
                 h2("Tutorial"),
                 tags$hr(),
                 tags$div("Watch this tutorial video to take in hands Wimtrap. You will find all the necessary information related to the 
                          possibilities offered by the app, the data required and their format, the different options and the outputs."),
-                HTML('<iframe width="560" height="315" src="https://www.youtube.com/watch?v=MkUgkDLp2iE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'),
+                HTML('<iframe width="560" height="315" src="https://www.youtube.com/watch?v=6371fN7dkak" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'),
                 h2("Further resources"),
                 tags$hr(),
                 tags$div("Please refer to the ", tags$a(href = "https://htmlpreview.github.io/?https://github.com/RiviereQuentin/Wimtrap/blob/main/vignettes/Wimtrap.html",
@@ -79,7 +79,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                    ),
                    p("OR"),
                    
-                  PlantCarepat:::fileWimtrap(
+                  WimtrapWeb:::fileWimtrap(
                      inputId = ns("pwm"),
                      label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
                      accept = c(".meme", ".pfm", ".jaspar", ".transfac",
@@ -131,7 +131,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                  ),
                  
                  tags$div(id= "fieldset",
-                          PlantCarepat:::fileWimtrap(
+                          WimtrapWeb:::fileWimtrap(
                             inputId = ns("pwmb"),
                             label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
                             accept = c(".meme", ".pfm", ".jaspar", ".transfac",
@@ -141,7 +141,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                           ),
                  br(),
                  tags$div(id = "fieldset",
-                          PlantCarepat:::fileWimtrap(
+                          WimtrapWeb:::fileWimtrap(
                             inputId = ns("filesChIP"),
                             label = tags$div(
                               "TF ChIP-peaks data (.bed* or .narrowPeak)",
@@ -163,7 +163,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                           ),
                  br(),
                  tags$div(id = "fieldset",
-                   PlantCarepat:::fileWimtrap(
+                   WimtrapWeb:::fileWimtrap(
                      inputId = ns("filesData"),
                      label = tags$div(
                        "Genomic data (.bed** or .gtf)",
@@ -288,7 +288,7 @@ mod_AdaptativeSelection_ui <- function(id) {
     tabPanel("Predict",
              sidebarLayout(
                sidebarPanel(
-                 PlantCarepat:::fileWimtrap(
+                 WimtrapWeb:::fileWimtrap(
                    inputId = ns("pwmc"),
                    label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
                    accept = c(".meme", ".pfm", ".jaspar", ".transfac",
@@ -318,10 +318,10 @@ mod_AdaptativeSelection_ui <- function(id) {
                  conditionalPanel(
                    condition = "input.checkc3 == true",
                    tags$div(id = "fieldset",
-                            PlantCarepat:::fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("TFBSmodel"),
                               label = "TFBS model (.Rdata,  .rda)",
-                              accept = c(".Rdata", ".rda"),
+                              accept = c(".RData", ".rda"),
                               multiple = FALSE
                             ),
                             
@@ -337,7 +337,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                    
                    tags$div(id = "fieldset",
                             
-                            PlantCarepat:::fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("genomec"),
                               label = "Genomic sequence (.fasta, .fa. fasta.gzip, fa.gzip)",
                               accept = c(".fa", ".fasta", ".fa.gzip", ".fasta.gzip")
@@ -346,13 +346,13 @@ mod_AdaptativeSelection_ui <- function(id) {
                             tags$div(id = 'placeholder4'),
                             
                             
-                            PlantCarepat:::fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("tssc"),
                               label = "Location of TSSs (.bed)",
                               accept = ".bed"
                             ),
                             
-                            PlantCarepat:::fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("ttsc"),
                               label = "Location of TTSs (.bed)",
                               accept = ".bed"
@@ -364,10 +364,10 @@ mod_AdaptativeSelection_ui <- function(id) {
                  conditionalPanel(
                    condition = "input.checkc2 == true",
                    tags$div(id = "fieldset",
-                            PlantCarepat:::fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("TFBSmodelc"),
-                              label = "TFBS model (.Rdata,  .rda)",
-                              accept = c(".Rdata", ".rda"),
+                              label = "TFBS model (.RData,  .rda)",
+                              accept = c(".RData", ".rda"),
                               multiple = FALSE
                             ),
                             
@@ -536,7 +536,7 @@ mod_AdaptativeSelection_server <- function(id) {
                          color = "#428bca",
                          text = "Please wait...")
       
-      results <- PlantCarepat::carepat(
+      results <- WimtrapWeb:::carepat(
         organism = input$organism,
         condition = input$condition,
         pfm = input$pwm$datapath,
@@ -629,7 +629,7 @@ mod_AdaptativeSelection_server <- function(id) {
         } else {
         tags$div(
           id = "fieldset",
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("genome"),
             label = "Genomic sequence (.fasta, .fa, .fasta.gzip, .fa.gzip)",
             accept = c(".fa", ".fasta", ".fa.gzip", ".fasta.gzip")
@@ -647,25 +647,25 @@ mod_AdaptativeSelection_server <- function(id) {
             value = 500
           ),
           
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("x5utr"),
             label = "Location of 5'UTRs (.bed***) (facultative)",
             accept = ".bed"
           ),
           
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("cds"),
             label = "Location of coding sequences (.bed***) (facultative)",
             accept = ".bed"
           ),
           
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("intron"),
             "Location of introns (.bed***) (facultative)",
             accept = ".bed"
           ),
           
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("x3Utr"),
             label = "Location of 3'UTRs (.bed***) (facultative)",
             accept = ".bed"
@@ -677,13 +677,13 @@ mod_AdaptativeSelection_server <- function(id) {
             value = 1000
           ),
           
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("tss"),
             label = "Location of TSSs (.bed***)",
             accept = ".bed"
           ),
           
-          PlantCarepat:::fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("tts"),
             label = "Location of TTSs (.bed***)",
             accept = ".bed"
@@ -812,7 +812,7 @@ mod_AdaptativeSelection_server <- function(id) {
       ChIPpeaks.carepat <- as.character(input$filesChIP$datapath)
       names(ChIPpeaks.carepat) <- TFnames.carepat
       model.carepat <-
-        PlantCarepat:::buildTFBSmodel(TFBSdata = TFBSdata.carepat,
+        WimtrapWeb:::buildTFBSmodel(TFBSdata = TFBSdata.carepat,
                                       ChIPpeaks = ChIPpeaks.carepat)
       shinybusy::remove_modal_spinner()
       return(model.carepat)
@@ -879,7 +879,7 @@ mod_AdaptativeSelection_server <- function(id) {
     
     output$downloadModel <- downloadHandler(
       filename = function() {
-        paste("TFBSmodel_", Sys.Date(), "_", Sys.time(), ".Rdata", sep = "")
+        paste("TFBSmodel_", Sys.Date(), "_", Sys.time(), ".RData", sep = "")
       },
       content = function(file) {
         save(Wimtrap_model2, file = file)

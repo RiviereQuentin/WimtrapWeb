@@ -19,7 +19,7 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ## 
 golem::fill_desc(
-  pkg_name = "PlantCarepat", # The Name of the package containing the App 
+  pkg_name = "WimtrapWeb", # The Name of the package containing the App 
   pkg_title = "Plant 'Cis-Acting Regulatory Elements' Prediction Tools", # The Title of the package containing the App 
   pkg_description = "Application implementing the Wimtrap method to predict in different plant species the Cis-Acting Regulatory Elements
   and gene targets of transcription factors. The method inttegrates condition-independent and condition-depentdent genomic features at
@@ -29,7 +29,7 @@ golem::fill_desc(
   author_first_name = "Quentin", # Your First Name
   author_last_name = "Rivière", # Your Last Name
   author_email = "qri@hotmail.be", # Your Email
-  repo_url = "https://github.com/RiviereQuentin/Wimtrap" # The URL of the GitHub Repo (optional) 
+  repo_url = "https://github.com/RiviereQuentin/WimtrapWeb" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ----
@@ -55,7 +55,7 @@ golem::use_recommended_deps()
 
 ## Favicon ----
 # If you want to change the favicon (default is golem's one)
-golem::use_favicon("C:/Users/qri/Documents/Carepat/Reviews/PlantCarepat_Logo3.png") # path = "path/to/ico". Can be an online file. 
+#golem::use_favicon("C:/Users/qri/Documents/Carepat/Reviews/PlantCarepat_Logo3.png") # path = "path/to/ico". Can be an online file. 
 golem::remove_favicon()
 
 ## Add helper functions ----
