@@ -74,7 +74,7 @@ functions, which can be accessed by entering in R:
         ?predictTFBS()
         ?plotPredictions()
 
-\##Authors
+## Authors
 
 This web-application was developed at the [LPGMP](https://lpgmp.ulb.be/)
 and [MLG](https://mlg.ulb.ac.be/wordpress) groups of the Université
