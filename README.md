@@ -39,8 +39,7 @@ In R, type the following lines:
 Then, you can enter:
 
 ``` r
-  options(repos = BiocManager::repositories())
-  #options(download.file.method = "wininet")
+  options(download.file.method = "wininet")
   BiocManager::install("RiviereQuentin/WimtrapWeb",                     
     dependencies = TRUE,                     
     build_vignettes = TRUE,
@@ -54,6 +53,7 @@ To start to use WimtrapWeb, please run the app as follows
 ``` r
 library(WimtrapWeb)
 run_app()
+#> PhantomJS not found. You can install it with webshot::install_phantomjs(). If it is installed, please make sure the phantomjs executable can be found via the PATH variable.
 ```
 
 <div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
