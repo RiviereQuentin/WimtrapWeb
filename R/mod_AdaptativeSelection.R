@@ -26,8 +26,8 @@ mod_AdaptativeSelection_ui <- function(id) {
                  h2("Introduction"),
                  tags$hr(),
                  tags$div(
-                   "Wimtrap is a web-application for the prediction of ", tags$b("condition-specific"), 
-                   " transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites 
+                   "Wimtrap is a web-application for the prediction of ", tags$b("condition-specific"),
+                   " transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites
                    by pattern-matching and annotate them with genomic features that characterize their genomic context
                    (opening of the DNA, chromatin marks, DNA conservation, digital genomic footprints,...). Then, the potential TF
                    binding sites likely to be CARE in the condition of interest are selected based on a \'decision rules` model. This model is otained
@@ -37,24 +37,24 @@ mod_AdaptativeSelection_ui <- function(id) {
                    tags$br(), tags$br(), "The ", tags$b("\`Build\`"), " and ",  tags$b("\`Predict\`"), " panels allow you to build your own models and use them for any other condition and organism"),
                 h2("Tutorial"),
                 tags$hr(),
-                tags$div("Watch this tutorial video to take in hands Wimtrap. You will find all the necessary information related to the 
+                tags$div("Watch this tutorial video to take in hands Wimtrap. You will find all the necessary information related to the
                          possibilities offered by the app, the data required and their format, the different options and the outputs."),
                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/watch?v=6371fN7dkak" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'),
                 h2("Further resources"),
                 tags$hr(),
                 tags$div("Please refer to the ", tags$a(href = "https://htmlpreview.github.io/?https://github.com/RiviereQuentin/Wimtrap/blob/main/vignettes/Wimtrap.html",
                 "Wimtrap user guide"), "for further methodological details.
-                Example data used in the tutorial and source data for ", tags$i("Arabidopsis thaliana"), " and ", tags$i("Solanum lycopersicum"),  " 
+                Example data used in the tutorial and source data for ", tags$i("Arabidopsis thaliana"), " and ", tags$i("Solanum lycopersicum"),  "
                 can be found on the ", tags$a(href = "https://github.com/RiviereQuentin/carepat", "carepat github repository") ),
                 h2("Authors"),
                 tags$hr(),
-                tags$div("This web-application was developed at the ", tags$a(href = "https://lpgmp.ulb.be/", "LPGMP"), " and ", tags$a(href = "https://mlg.ulb.ac.be/wordpress/", "MLG"), 
+                tags$div("This web-application was developed at the ", tags$a(href = "https://lpgmp.ulb.be/", "LPGMP"), " and ", tags$a(href = "https://mlg.ulb.ac.be/wordpress/", "MLG"),
                          "groups of the Université Libre de Bruxelles by Quentin Rivière <qri@hotmail.be>, Madalina Ciortan, Massimiliano Corso, Grégoire Noël, Nathalie Verbruggen and Matthieu Defrance <Matthieu.Defrance@ulb.be>.")
-                
-                
+
+
                  ),
     tabPanel("Query",
-             
+
              sidebarLayout(
                sidebarPanel(
                  selectizeInput(
@@ -63,13 +63,13 @@ mod_AdaptativeSelection_ui <- function(id) {
                    choices = c("Arabidopsis thaliana",
                                "Solanum lycopersicum")
                  ),
-                 
+
                  selectizeInput(
                    inputId = ns("condition"),
                    label = "Condition",
                    choices = NULL
                  ),
-                 
+
                  splitLayout(
                    selectizeInput(
                      inputId = ns("tf"),
@@ -78,7 +78,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                      multiple = TRUE
                    ),
                    p("OR"),
-                   
+
                   WimtrapWeb:::fileWimtrap(
                      inputId = ns("pwm"),
                      label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
@@ -86,11 +86,11 @@ mod_AdaptativeSelection_ui <- function(id) {
                                 ".motif", ".txt"),
                      multiple = TRUE
                    ),
-                   
+
                    cellWidths = c("45%", "10%", "45%")
-                   
+
                  ),
-                 
+
                  sliderInput(
                    inputId = ns("score_threshold"),
                    label = "Prediction score threshold",
@@ -98,23 +98,23 @@ mod_AdaptativeSelection_ui <- function(id) {
                    max = 1,
                    value = 0.86
                  ),
-                 
+
                  actionButton(
                    inputId = ns("submit"),
                    label = "Submit",
                    icon = icon("leaf")
                  )
              ),
-               
+
                mainPanel(
                  downloadButton(ns("downloadData1"), "Download CARE predictions"),
-                 
+
                  downloadButton(ns("downloadData2"), "Download Target predictions"),
                  br(),
                 dataTableOutput(ns(
                  "CAREpredictions"
                )),
-               
+
                dataTableOutput(ns(
                  "Targetpredictions"
                )))
@@ -129,7 +129,7 @@ mod_AdaptativeSelection_ui <- function(id) {
           border: solid;
                    }"
                  ),
-                 
+
                  tags$div(id= "fieldset",
                           WimtrapWeb:::fileWimtrap(
                             inputId = ns("pwmb"),
@@ -180,59 +180,59 @@ mod_AdaptativeSelection_ui <- function(id) {
                        tags$br(),
                        tags$span(style = "font-weight: 500; font-size: 14px; color: grey", "  - with a category => in BED6 format. Fill the \'name\' field accordingly.
                                  The \'score\' and \'strand\' fields can be filled with \".\"")
-                       
+
                      ),
                      accept = c(".bed", ".gtf"),
                      placeholder = "No file(s) selected",
                      multiple = TRUE
                    ),
-                   
+
                    "Name the genomic features:",
                    br(),
                    br(),
                    tags$div(id = 'placeholder2')
                  ),
-                 br(), 
-                 
+                 br(),
+
                  checkboxInput(ns("biomart"),
                                label = "Automatically download the genome sequence and the transcript models from Ensembl Plants and BioMart",
                                value = TRUE),
                  uiOutput(outputId = ns("biomartui")),
 
-                 
-                 
+
+
                  #checkboxGroupInput(inputId = ns("checkoptional"),
                  #                   label = "Check list",
                  #                   choices = c("TSSs are annotated with the name and orientation of the transcripts",
                  #                               "TTss are annotated with the name and orientation of the transcripts")),
                  #)
-                 
+
                  tags$em(
                    "Tip: name consistently the chromosomes in all the files provided, following the Ensembl Plants notation"
                  ),
-                 
+
                  br(),
-                 
+
                  actionButton(inputId = ns("build"),
                               label = "Build!",
                               icon = icon("leaf")),
-                 
+
                  tags$h2("Demo"),
                  tags$br(),
-                 tags$div("Please download the ", 
+                 tags$div("Please download the ",
                           tags$a(href = "https://github.com/RiviereQuentin/carepat", "carepat github repository"),
                           " (click Code -> Download ZIP) and browse to the \'demo\' folder. Then, we invite you to follow the instructions from the tutorial video.",
                           tags$br(),
                           tags$h4("Application cases considered:"),
                           tags$ul(
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
+                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions
                                   in the ", tags$b("same condition"), " (in the organism 1)"),
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
+                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions
                                   in the ", tags$b("condition2"), " (in the organism 1)"),
                           ),
                           tags$h4("TFs identified to build the model:"),
-                          tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ", 
-                          tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM 
+                          tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ",
+                          tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM
                           and location of ChIP-peaks in BED3 or narrowPeak",
                           tags$h4("TF considered for making predictions:"),
                           "-> ", tags$b("TFexample3"), " => PWM in PFM",
@@ -248,11 +248,11 @@ mod_AdaptativeSelection_ui <- function(id) {
                            tags$li("-> Average digital genomic footprint (", tags$b("DGF"), ") ", tags$b("score"), " -> BED6"),
                            tags$li("-> Average DNAseI hypersensitivity (", tags$b("DHS"), ") ", tags$b("score"), " -> BED6")
                          )
-                         
-                          
-              
+
+
+
                )),
-               
+
                mainPanel(
                  downloadButton(ns("downloadModel"), "Download TFBS model"),
 
@@ -275,7 +275,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                           comprising 20% of the TFBS validated by ChIP-seq for all the TFS that were input). The variable to predict takes 0 when
                           the candidate is not validated by ChIP-seq, 1 otherwise."),
                  verbatimTextOutput(ns("confusion")),
-                 
+
                  tags$hr(),
                  h4("Feature Importance (Gain)"),
                  tags$div("The feature importance is assessed using the ", tags$a(href = "https://towardsdatascience.com/be-careful-when-interpreting-your-features-importance-in-xgboost-6e16132588e7", "Gain"),
@@ -284,7 +284,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                  plotOutput(ns("feature"))
                )
              )),
-    
+
     tabPanel("Predict",
              sidebarLayout(
                sidebarPanel(
@@ -295,13 +295,13 @@ mod_AdaptativeSelection_ui <- function(id) {
                               ".motif", ".txt"),
                    multiple = TRUE
                  ),
-                 
+
                  textInput(
                    inputId = ns("motifsc"),
                    label = "Enter the name of the motifs of interest, as encoded in the PWM file",
                    placeholder = "Separate the name of the motifs with commas"
                  ),
-                 
+
                  tags$div(
                    HTML("<label>"),
                    HTML("<input type=\"checkbox\" name=\"checkc\" onclick=\"onlyOne(this)\" value=1 id=\"AdaptativeSelection_ui_1-checkc1\" Checked>"),
@@ -314,7 +314,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                    HTML("<input type=\"checkbox\" name=\"checkc\" onclick=\"onlyOne(this)\" value=3 id=\"AdaptativeSelection_ui_1-checkc3\">"),
                    HTML("Manually input the data</label><br></br>")
                  ),
-                 
+
                  conditionalPanel(
                    condition = "input.checkc3 == true",
                    tags$div(id = "fieldset",
@@ -324,34 +324,34 @@ mod_AdaptativeSelection_ui <- function(id) {
                               accept = c(".RData", ".rda"),
                               multiple = FALSE
                             ),
-                            
+
                             verbatimTextOutput(outputId = ns("PredictiveFeatures"))
                    ),
                    br(),
-                   
+
                    tags$div(id = "fieldset",
                             tags$div(id = 'placeholder3')
                    ),
-                   
+
                    br(),
-                   
+
                    tags$div(id = "fieldset",
-                            
+
                             WimtrapWeb:::fileWimtrap(
                               inputId = ns("genomec"),
                               label = "Genomic sequence (.fasta, .fa. fasta.gzip, fa.gzip)",
                               accept = c(".fa", ".fasta", ".fa.gzip", ".fasta.gzip")
                             ),
-                            
+
                             tags$div(id = 'placeholder4'),
-                            
-                            
+
+
                             WimtrapWeb:::fileWimtrap(
                               inputId = ns("tssc"),
                               label = "Location of TSSs (.bed)",
                               accept = ".bed"
                             ),
-                            
+
                             WimtrapWeb:::fileWimtrap(
                               inputId = ns("ttsc"),
                               label = "Location of TTSs (.bed)",
@@ -360,7 +360,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                    ,
                    ns = NS(id)
                  ),
-                 
+
                  conditionalPanel(
                    condition = "input.checkc2 == true",
                    tags$div(id = "fieldset",
@@ -370,17 +370,17 @@ mod_AdaptativeSelection_ui <- function(id) {
                               accept = c(".RData", ".rda"),
                               multiple = FALSE
                             ),
-                            
+
                             verbatimTextOutput(outputId = ns("PredictiveFeaturesc"))
                    ),
                    br(),
-                   
+
                    tags$div(id = "fieldset",
                             tags$div(id = 'placeholder5')
                    ),
-                   
+
                    br(),
-                   
+
                    tags$div(
                      id = "fieldset",
                      textInput(inputId = ns("organismc"),
@@ -390,31 +390,31 @@ mod_AdaptativeSelection_ui <- function(id) {
                        label = "Promoter length (from TSS)",
                        value = 2000
                      ),
-                     
+
                      numericInput(
                        inputId = ns("proximalec"),
                        label = "Proximal promoter length (from TSS)",
                        value = 500
                      ),
-                     
+
                      numericInput(
                        inputId = ns("downstreamc"),
                        "Downstream region length (from TTS)",
                        value = 1000
                      )
-                     ), 
+                     ),
                    ns = NS(id)
                  ),
-                 
-                 
-                 
+
+
+
                  #checkboxGroupInput(inputId = ns("checkoptional"),
                  #                   label = "Check list",
                  #                   choices = c("TSSs are annotated with the name and orientation of the transcripts",
                  #                               "TTss are annotated with the name and orientation of the transcripts")),
                  #)
 
-                 
+
                  sliderInput(
                    inputId = ns("score_thresholdc"),
                    label = "Prediction score threshold",
@@ -422,31 +422,31 @@ mod_AdaptativeSelection_ui <- function(id) {
                    max = 1,
                    value = 0.86
                  ),
-                 
+
                  tags$em(
                    "Tip: name consistently the chromosomes in all the files provided, following the Ensembl Plants notation"
                  ),
-                 
+
                  br(),
-                 
+
                  actionButton(inputId = ns("predict"),
                               label = "Predict!",
                               icon = icon("leaf")),
-                 
-                 tags$div("Please download the ", 
+
+                 tags$div("Please download the ",
                           tags$a(href = "https://github.com/RiviereQuentin/carepat", "carepat github repository"),
                           " (click Code -> Download ZIP) and browse to the \'demo\' folder. Then, we invite you to follow the instructions from the tutorial video.",
                           tags$br(),
                           tags$h4("Application cases considered:"),
                           tags$ul(
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
+                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions
                                   in the ", tags$b("same condition"), " (in the organism 1)"),
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
+                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions
                                   in the ", tags$b("condition2"), " (in the organism 1)"),
                           ),
                           tags$h4("TFs identified to build the model:"),
-                          tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ", 
-                          tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM 
+                          tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ",
+                          tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM
                           and location of ChIP-peaks in BED3 or narrowPeak",
                  tags$h4("TF considered for making predictions:"),
                  "-> ", tags$b("TFexample3"), " => PWM in PFM",
@@ -462,26 +462,26 @@ mod_AdaptativeSelection_ui <- function(id) {
                    tags$li("-> Average digital genomic footprint (", tags$b("DGF"), ") ", tags$b("score"), " -> BED6"),
                    tags$li("-> Average DNAseI hypersensitivity (", tags$b("DHS"), ") ", tags$b("score"), " -> BED6")
                  )
-                 
-                 
-                 
+
+
+
                )
-                 
-                 
-                
-                  
+
+
+
+
                ),
-               
+
                mainPanel(
-                 
+
                  downloadButton(ns("downloadData3"), "Download TFBS predictions"),
-                 
+
                  downloadButton(ns("downloadData4"), "Download Target predictions"),
-                 
+
                  dataTableOutput(ns(
                  "CAREpredictions2"
                )),
-               
+
                dataTableOutput(ns(
                  "Targetpredictions2"
                )))
@@ -495,47 +495,47 @@ mod_AdaptativeSelection_ui <- function(id) {
 mod_AdaptativeSelection_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
-    
+
+
     options(shiny.maxRequestSize = 200 * 1024 ^ 2)
-    
+
     observeEvent(input$organism,
                  {
                    updateSelectizeInput(inputId = "condition",
-                                        choices = species_metadata[[input$organism]][["conditions"]])
+                                        choices = WimtrapWeb::species_metadata[[input$organism]][["conditions"]])
                  })
-    
+
     observeEvent(input$organism,
                  {
                    updateSelectizeInput(inputId = "tf",
-                                        choices = species_metadata[[input$organism]][["TFs"]])
+                                        choices = WimtrapWeb::species_metadata[[input$organism]][["TFs"]])
                  })
-    
-    
+
+
     pwm_react <- reactiveValues(TFs = NULL)
-    
+
     observeEvent(input$pwm, {
       if (is.null(input$pwm))
         return()
       pwmimp <- Wimtrap:::readPSFM(input$pwm$datapath)
       pwm_react$TFs <- names(pwmimp)
     })
-    
-    
+
+
     v <- reactiveValues(data = NULL)
-    
+
     observeEvent(input$submit,
                  {
                    v$data <- rnorm(100)
                  })
-    
+
     CARE_predictions <- reactive({
       if (is.null(v$data))
         return(data.table::data.table(NULL))
       show_modal_spinner(spin = "cube-grid",
                          color = "#428bca",
                          text = "Please wait...")
-      
+
       results <- WimtrapWeb:::carepat(
         organism = input$organism,
         condition = input$condition,
@@ -546,11 +546,11 @@ mod_AdaptativeSelection_server <- function(id) {
       remove_modal_spinner()
       return(results)
     })
-    
+
     output$CAREpredictions <- renderDataTable({
       CARE_predictions()
     })
-    
+
     Target_predictions <- reactive({
       if (is.null(v$data))
         return(data.table::data.table(NULL))
@@ -572,11 +572,11 @@ mod_AdaptativeSelection_server <- function(id) {
       remove_modal_spinner()
       return(genes)
     })
-    
+
     output$TargetPredictions <- renderDataTable({
       Target_predictions()
     })
-    
+
     output$downloadData1 <- downloadHandler(
       filename = function() {
         paste("CARE_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
@@ -588,7 +588,7 @@ mod_AdaptativeSelection_server <- function(id) {
                     row.names = FALSE)
       }
     )
-    
+
     output$downloadData2 <- downloadHandler(
       filename = function() {
         paste("Target_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
@@ -600,7 +600,7 @@ mod_AdaptativeSelection_server <- function(id) {
                     row.names = FALSE)
       }
     )
-    
+
     output$biomartui <- renderUI({
       if (input$biomart){
         tags$div(
@@ -612,20 +612,20 @@ mod_AdaptativeSelection_server <- function(id) {
             label = "Promoter length (from TSS)",
             value = 2000
           ),
-          
+
           numericInput(
             inputId = ns("proximalb"),
             label = "Proximal promoter length (from TSS)",
             value = 500
           ),
-          
+
           numericInput(
             inputId = ns("downstreamb"),
             "Downstream region length (from TTS)",
             value = 1000
           )
         )
-        
+
         } else {
         tags$div(
           id = "fieldset",
@@ -634,70 +634,70 @@ mod_AdaptativeSelection_server <- function(id) {
             label = "Genomic sequence (.fasta, .fa, .fasta.gzip, .fa.gzip)",
             accept = c(".fa", ".fasta", ".fa.gzip", ".fasta.gzip")
           ),
-          
+
           numericInput(
             inputId = ns("promoter"),
             label = "Promoter length (from TSS)",
             value = 2000
           ),
-          
+
           numericInput(
             inputId = ns("proximal"),
             label = "Proximal promoter length (from TSS)",
             value = 500
           ),
-          
+
           WimtrapWeb:::fileWimtrap(
             inputId = ns("x5utr"),
             label = "Location of 5'UTRs (.bed***) (facultative)",
             accept = ".bed"
           ),
-          
+
           WimtrapWeb:::fileWimtrap(
             inputId = ns("cds"),
             label = "Location of coding sequences (.bed***) (facultative)",
             accept = ".bed"
           ),
-          
+
           WimtrapWeb:::fileWimtrap(
             inputId = ns("intron"),
             "Location of introns (.bed***) (facultative)",
             accept = ".bed"
           ),
-          
+
           WimtrapWeb:::fileWimtrap(
             inputId = ns("x3Utr"),
             label = "Location of 3'UTRs (.bed***) (facultative)",
             accept = ".bed"
           ),
-          
+
           numericInput(
             inputId = ns("downstream"),
             "Downstream region length (from TTS)",
             value = 1000
           ),
-          
+
           WimtrapWeb:::fileWimtrap(
             inputId = ns("tss"),
             label = "Location of TSSs (.bed***)",
             accept = ".bed"
           ),
-          
+
           WimtrapWeb:::fileWimtrap(
             inputId = ns("tts"),
             label = "Location of TTSs (.bed***)",
             accept = ".bed"
           ),
           tags$br(),
-          tags$span(style = "font-weight: 500; font-size: 14px; color: grey", "***BED6 format. Fill the \'name\' field accordingly to the transcript name. For TSS and TTS, 
+          tags$span(style = "font-weight: 500; font-size: 14px; color: grey", "***BED6 format. Fill the \'name\' field accordingly to the transcript name. For TSS and TTS,
                     specify the orientation of the transcripts in the \'strand\' field. Otherwise, the \'strand'\ field can be filled with '\".\"")
           )
-        
+
       }
     })
-  
-    
-    
+
+
+
     output$filepathtss <- renderText({
       if (is.null(input$tss)){
         return()
@@ -715,8 +715,8 @@ mod_AdaptativeSelection_server <- function(id) {
           }
           }
     })
-    
-    
+
+
     output$filepathtts <- renderText({
       if (is.null(input$tts)){
         return()
@@ -733,14 +733,14 @@ mod_AdaptativeSelection_server <- function(id) {
         }
       }
     })
-    
+
     w <- reactiveValues(data = NULL)
-    
+
     observeEvent(input$build,
                  {
                    w$data <- rnorm(100)
                  })
-    
+
     Wimtrap_model <- eventReactive(input$build, {
       shinybusy::show_modal_spinner(spin = "cube-grid",
                                     color = "#428bca",
@@ -765,7 +765,7 @@ mod_AdaptativeSelection_server <- function(id) {
           error = function(e){return(NA)},
           finally = message("Interrogating Ensembl and Biomart..."))
         if(is.na(imported_genomic_data.carepat)){
-          imported_genomic_data.carepat <- 
+          imported_genomic_data.carepat <-
             Wimtrap::importGenomicData(organism = as.character(input$organismb),
                                        genomic_data = genomic_data.carepat,
                                        promoter_length = as.numeric(input$promoterb),
@@ -779,7 +779,7 @@ mod_AdaptativeSelection_server <- function(id) {
             organism = as.character(input$organismb),
             imported_genomic_data = imported_genomic_data.carepat
           )
-      
+
       } else {
       transcript_data.carepat <-
         c(
@@ -807,7 +807,7 @@ mod_AdaptativeSelection_server <- function(id) {
           genome_sequence = as.character(input$genome$datapath),
           imported_genomic_data = imported_genomic_data.carepat
         )
-      
+
       }
       ChIPpeaks.carepat <- as.character(input$filesChIP$datapath)
       names(ChIPpeaks.carepat) <- TFnames.carepat
@@ -817,20 +817,20 @@ mod_AdaptativeSelection_server <- function(id) {
       shinybusy::remove_modal_spinner()
       return(model.carepat)
     })
-    
+
     ww <- reactiveValues(data = NULL)
     observeEvent(input$build,
                  {
                    ww$data <- rnorm(100)
                  })
 
-    
+
     output$roc <- renderPlot({
       if (is.null(ww$data))
         return()
       plotROC(Wimtrap_model())
     })
-    
+
     output$downloadROC <- downloadHandler({
       filename = function() {
         paste("ROC_", Sys.Date(), "_", Sys.time(), ".png", sep = "")
@@ -841,13 +841,13 @@ mod_AdaptativeSelection_server <- function(id) {
       print(plotROC(Wimtrap_model()))
       dev.off()
     })
-    
+
     output$confusion <- renderPrint({
       if (is.null(ww$data))
         return()
       printConfusionMatrix(Wimtrap_model())
     })
-    
+
     output$feature <- renderPlot({
       if (is.null(ww$data))
         return()
@@ -868,7 +868,7 @@ mod_AdaptativeSelection_server <- function(id) {
       print(plotFeatureImportance(Wimtrap_model()))
       dev.off()
     })
-    
+
     observe({
       if (!(is.null(w$data))){
         Wimtrap_model2 <- reactiveValues()
@@ -876,7 +876,7 @@ mod_AdaptativeSelection_server <- function(id) {
         w$data <- NULL
       }
     })
-    
+
     output$downloadModel <- downloadHandler(
       filename = function() {
         paste("TFBSmodel_", Sys.Date(), "_", Sys.time(), ".RData", sep = "")
@@ -885,14 +885,14 @@ mod_AdaptativeSelection_server <- function(id) {
         save(Wimtrap_model2, file = file)
       }
     )
-    
+
     z <- reactiveValues(data = NULL)
-    
+
     observeEvent(input$TFBSmodel,
                  {
                    z$data <- rnorm(100)
                  })
-    
+
     PredFeatures <- reactive({
       if (is.null(z$data))
         return ("The predictive features are: ")
@@ -911,25 +911,25 @@ mod_AdaptativeSelection_server <- function(id) {
              replacement = "",
              x = predictiveFeatures)
       if(length(grep(pattern = "matchLogPval", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "matchLogPval", x = predictiveFeatures)]
       }
       if(length(grep(pattern = "Matches", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "Matches", x = predictiveFeatures)]
       }
       if (length(grep(pattern = "DistToClosestTSS", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
          predictiveFeatures[-grep(pattern = "DistToClosestTSS", x = predictiveFeatures)]
       }
       if (length(grep(pattern = "DistToClosestTTS", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "DistToClosestTTS", x = predictiveFeatures)]
@@ -943,18 +943,18 @@ mod_AdaptativeSelection_server <- function(id) {
         paste(predictiveFeatures, collapse = ", ")
       ))
     })
-    
+
     output$PredictiveFeatures <- renderPrint({
       PredFeatures()
     })
-    
+
     zc <- reactiveValues(data = NULL)
-    
+
     observeEvent(input$TFBSmodelc,
                  {
                    zc$data <- rnorm(100)
                  })
-    
+
     PredFeaturesc <- reactive({
       if (is.null(zc$data))
         return ("The predictive features are: ")
@@ -973,25 +973,25 @@ mod_AdaptativeSelection_server <- function(id) {
              replacement = "",
              x = predictiveFeatures)
       if(length(grep(pattern = "matchLogPval", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "matchLogPval", x = predictiveFeatures)]
       }
       if(length(grep(pattern = "Matches", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "Matches", x = predictiveFeatures)]
       }
       if (length(grep(pattern = "DistToClosestTSS", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "DistToClosestTSS", x = predictiveFeatures)]
       }
       if (length(grep(pattern = "DistToClosestTTS", x = predictiveFeatures))==0){
-        
+
       } else {
         predictiveFeatures <-
           predictiveFeatures[-grep(pattern = "DistToClosestTTS", x = predictiveFeatures)]
@@ -1005,25 +1005,25 @@ mod_AdaptativeSelection_server <- function(id) {
         paste(predictiveFeatures, collapse = ", ")
       ))
     })
-    
+
     output$PredictiveFeaturesc <- renderPrint({
       PredFeaturesc()
     })
-    
+
     zz <- reactiveValues(data = NULL)
-    
+
     observeEvent(input$predict,
                  {
                  zz$data <- rnorm(100)
                  })
-    
+
     CARE_predictions2 <- reactiveValues()
-    
+
     observeEvent(input$predict,{
       show_modal_spinner(spin = "cube-grid",
                          color = "#428bca",
                          text = "Please wait...")
-      
+
       if (input$checkc1) {
         print("Alexandra")
         if (is.null(input$organismb)){
@@ -1061,7 +1061,7 @@ mod_AdaptativeSelection_server <- function(id) {
             error = function(e){return(NA)},
             finally = message("Interrogating Ensembl and Biomart..."))
           if(is.na(imported_genomic_data2)){
-            imported_genomic_data2 <- 
+            imported_genomic_data2 <-
               Wimtrap::importGenomicData(organism = as.character(input$organismb),
                                          genomic_data = genomic_data.carepat,
                                          promoter_length = as.numeric(input$promoterb),
@@ -1069,7 +1069,7 @@ mod_AdaptativeSelection_server <- function(id) {
                                          proximal_length = as.numeric(input$proximalb))
           }
         }
-      } else { 
+      } else {
         if (input$checkc2){
           genomicFeatures <-
             unlist(strsplit(x = as.character(PredFeaturesc()), split = "The predictive features are: "))
@@ -1087,7 +1087,7 @@ mod_AdaptativeSelection_server <- function(id) {
               genomicData[!(names(genomicData) %in% c("Promoter", "Downstream", "ProximalPromoter",
                                                       "CDS", "X5UTR", "X3UTR", "Intron"))]
           } else {
-            
+
           }
           genomicFeatures <- names(genomicData)
           genomicData <- do.call(rbind, genomicData)
@@ -1102,7 +1102,7 @@ mod_AdaptativeSelection_server <- function(id) {
             error = function(e){return(NA)},
             finally = message("Interrogating Ensembl and Biomart..."))
           if(is.na(imported_genomic_data2)){
-            imported_genomic_data2 <- 
+            imported_genomic_data2 <-
               Wimtrap::importGenomicData(organism = as.character(input$organismc),
                                          genomic_data = genomicData,
                                          promoter_length = as.numeric(input$promoterc),
@@ -1145,7 +1145,7 @@ mod_AdaptativeSelection_server <- function(id) {
           genome2 <- input$genomec$datapath
         }
       }
-      
+
       TFnames2 <-
         gsub(
           pattern = "\\s",
@@ -1153,7 +1153,7 @@ mod_AdaptativeSelection_server <- function(id) {
           x = as.character(input$motifsc)
         )
       TFnames2 <- unlist(strsplit(x = TFnames2, split = ","))
-      
+
       if (input$checkc2){
         TFBSdata2 <- Wimtrap::getTFBSdata(
           pfm = input$pwmc$datapath,
@@ -1161,7 +1161,7 @@ mod_AdaptativeSelection_server <- function(id) {
           organism = input$organismc,
           imported_genomic_data = imported_genomic_data2
         )
-        
+
       } else {
         if (input$checkc1 & input$biomart){
           TFBSdata2 <- Wimtrap::getTFBSdata(
@@ -1170,8 +1170,8 @@ mod_AdaptativeSelection_server <- function(id) {
             organism = as.character(input$organismb),
             imported_genomic_data = imported_genomic_data2
           )
-          
-        } else { 
+
+        } else {
           TFBSdata2 <- Wimtrap::getTFBSdata(
             pfm = input$pwmc$datapath,
             TFnames = TFnames2,
@@ -1180,7 +1180,7 @@ mod_AdaptativeSelection_server <- function(id) {
           )
         }
       }
-      
+
       results2 <- Wimtrap::predictTFBS(
         TFBSmodel = predictiveModel,
         TFBSdata = TFBSdata2,
@@ -1190,11 +1190,11 @@ mod_AdaptativeSelection_server <- function(id) {
       CARE_predictions2$data <- results2
       remove_modal_spinner()
     })
-    
+
     output$CAREpredictions2 <- renderDataTable({
       CARE_predictions2$data
     })
-    
+
     Target_predictions2 <- reactive({
       if (is.null(zz$data))
         return(data.table::data.table(NULL))
@@ -1216,11 +1216,11 @@ mod_AdaptativeSelection_server <- function(id) {
       remove_modal_spinner()
       return(genes2)
     })
-    
+
     output$TargetPredictions2 <- renderDataTable({
       Target_predictions2()
     })
-    
+
     output$downloadData3 <- downloadHandler(
       filename = function() {
         paste("CARE_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
@@ -1232,7 +1232,7 @@ mod_AdaptativeSelection_server <- function(id) {
                     row.names = FALSE)
       }
     )
-    
+
     output$downloadData4 <- downloadHandler(
       filename = function() {
         paste("Target_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
@@ -1244,7 +1244,7 @@ mod_AdaptativeSelection_server <- function(id) {
                     row.names = FALSE)
       }
     )
-    
+
     })
   }
 
