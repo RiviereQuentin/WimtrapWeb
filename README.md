@@ -39,6 +39,7 @@ In R, type the following lines:
 Then, you can enter:
 
 ``` r
+  options(download.file.method = "wininet")
   BiocManager::install("RiviereQuentin/WimtrapWeb",                     
     dependencies = TRUE,                     
     build_vignettes = TRUE,

@@ -25,6 +25,6 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.20")
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
-RUN RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/WimtrapWeb", dependencies = TRUE, build_vignettes = TRUE, force = TRUE)'
+RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/WimtrapWeb", dependencies = TRUE, build_vignettes = TRUE, force = TRUE)'
 RUN rm -rf /build_zone
-CMD R -e "options('shiny.port'=$PORT,shiny.host='0.0.0.0');WimtrapWeb::run_app()"
+CMD R -e "options(shiny.host='0.0.0.0');WimtrapWeb::run_app()"
