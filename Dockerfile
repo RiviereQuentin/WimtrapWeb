@@ -27,4 +27,4 @@ ADD . /build_zone
 WORKDIR /build_zone
 RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/WimtrapWeb", dependencies = TRUE, build_vignettes = TRUE, force = TRUE)'
 RUN rm -rf /build_zone
-CMD R -e "options(shiny.host='0.0.0.0');WimtrapWeb::run_app()"
+CMD R -e "options(shiny.host='0.0.0.0');library(WimtrapWeb);run_app()"
