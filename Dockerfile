@@ -6,7 +6,7 @@ RUN R -e 'install.packages("utils")'
 RUN R -e 'install.packages("curl")'
 RUN R -e 'install.packages("BiocManager")'
 RUN R -e 'BiocManager::install(version = "3.15")'
-RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/Wimtrap", dependencies = TRUE, build_vignettes = TRUE, force = TRUE)'
+RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/Wimtrap", dependencies = TRUE, build_vignettes = FALSE, force = TRUE)'
 RUN Rscript -e 'remotes::install_version("glue",upgrade="never", version = "1.6.1")'
 RUN Rscript -e 'remotes::install_version("processx",upgrade="never", version = "3.5.2")'
 RUN Rscript -e 'remotes::install_version("htmltools",upgrade="never", version = "0.5.2")'
@@ -25,6 +25,6 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.20")
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
-RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/WimtrapWeb", dependencies = TRUE, build_vignettes = TRUE, force = TRUE)'
+RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/WimtrapWeb", dependencies = TRUE, build_vignettes = FALSE, force = TRUE)'
 RUN rm -rf /build_zone
 CMD R -e "options(shiny.host='0.0.0.0');library(WimtrapWeb);run_app()"
