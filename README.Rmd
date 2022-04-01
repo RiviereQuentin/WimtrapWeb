@@ -13,7 +13,9 @@ knitr::opts_chunk$set(
 
 # WimtrapWeb
 
-**Wimtrap** is a R shiny application for the prediction of condition-specific transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites by pattern-matching and annotate them with genomic features that characterize their genomic context (opening of the DNA, chromatin marks, DNA conservation, digital genomic footprints,...). Then, the potential TF binding sites likely to be CARE in the condition of interest are selected based on a 'decision rules' model. This model is otained by maching learning using ChIP-seq data as reference.
+Remark: this is a demo version. The rice will be added soon as well as some improvements of the interface.
+
+**WimtrapWeb** is a R shiny application for the prediction of condition-specific transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites by pattern-matching and annotate them with genomic features that characterize their genomic context (opening of the DNA, chromatin marks, DNA conservation, digital genomic footprints,...). Then, the potential TF binding sites likely to be CARE in the condition of interest are selected based on a 'decision rules' model. This model is otained by maching learning using ChIP-seq data as reference.
 
 Prebuilt-models and genomic features integrated into the website allow to quickly obtain prediction of CARE and related potential gene targets in 10 different conditions *Arabidopsis thaliana* and 2 different conditions for *Solanum lycopersicum*. Go to the '**Query**' panel to take advantage of these ressources.
 

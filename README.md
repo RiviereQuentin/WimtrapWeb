@@ -1,7 +1,8 @@
 
 # WimtrapWeb
+Remark: this is a demo version. The rice will be added soon as well as some improvements of the interface.
 
-**Wimtrap** is a R shiny application for the prediction of
+**WimtrapWeb** is a R shiny application for the prediction of
 condition-specific transcription factor binding sites (TFBS) in plant
 species. The tool locates the potential TF binding-sites by
 pattern-matching and annotate them with genomic features that
