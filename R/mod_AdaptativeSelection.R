@@ -16,7 +16,6 @@
 #' @importFrom xgboost xgb.DMatrix xgb.cv xgb.train xgb.importance
 #' @importFrom pROC roc auc
 mod_AdaptativeSelection_ui <- function(id) {
-  data("species_metadata", package = "WimtrapWeb")
   ns <- NS(id)
   tagList(navbarPage(
     theme = bs_theme(bootswatch = "cerulean"),
@@ -26,17 +25,19 @@ mod_AdaptativeSelection_ui <- function(id) {
                  h1("Welcome to Wimtrap!"),
                  h2("Introduction"),
                  tags$hr(),
-                 tags$div(
-                   "Wimtrap is a web-application for the prediction of ", tags$b("condition-specific"), 
-                   " transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites 
+             tags$div(
+               "Wimtrap is a web-application for the prediction of ", tags$b("condition-specific"), 
+               " transcription factor binding sites (TFBS) in plant species. The tool locates the potential TF binding-sites 
                    by pattern-matching and annotate them with genomic features that characterize their genomic context
                    (opening of the DNA, chromatin marks, DNA conservation, digital genomic footprints,...). Then, the potential TF
-                   binding sites likely to be CARE in the condition of interest are selected based on a \'decision rules` model. This model is otained
-                   by maching learning using ChIP-seq data as reference.", tags$br(), tags$br(), "Prebuilt-models and genomic features integrated into the website allow to quickly
-                   obtain prediction of CARE and related potential gene targets in 10 different conditions for ", tags$i("Arabidopsis thaliana"), " and
-                   2 different conditions for ", tags$i("Solanum lycopersicum"), ". Go to the", tags$b("\`Query\`"), " panel to take advantage of these ressources.",
-                   tags$br(), tags$br(), "The ", tags$b("\`Build\`"), " and ",  tags$b("\`Predict\`"), " panels allow you to build your own models and use them for any other condition and organism"),
-                h2("Tutorial"),
+                   binding sites likely to be TFBS in the condition of interest are selected based on a \'decision rules` model. This model is obtained
+                   by maching learning using ChIP-seq data as reference.", tags$br(), tags$br(), 
+               "Prebuilt-models and genomic features integrated into the website allow to quickly
+                   obtain prediction of TFBS and related potential gene targets in 10 different conditions for ", tags$i("Arabidopsis thaliana"), " ,
+                   2 different conditions for ", tags$i("Solanum lycopersicum"), ", 2 different conditions for ", tags$i("Oryza sativa"),
+               " , and 1 condition for ", tags$i("Zea mays"),". Go to the", tags$b("\`Query pre-built models\`"), " panel to take advantage of these ressources.",
+               tags$br(), tags$br(), "The ", tags$b("\`Build custom models\`"), " and ",  tags$b("\`Use custom models\`"), " panels allow you to build your own models and use them for any other condition and organism"),
+             h2("Tutorial"),
                 tags$hr(),
                 tags$div("Watch this tutorial video to take in hands Wimtrap. You will find all the necessary information related to the 
                          possibilities offered by the app, the data required and their format, the different options and the outputs."),
@@ -54,15 +55,14 @@ mod_AdaptativeSelection_ui <- function(id) {
                 
                 
                  ),
-    tabPanel("Query",
+    tabPanel("Query pre-built models",
              
              sidebarLayout(
                sidebarPanel(
                  selectizeInput(
                    inputId = ns("organism"),
                    label = "Organism",
-                   choices = c("Arabidopsis thaliana",
-                               "Solanum lycopersicum")
+                   choices = names(species_metadata)
                  ),
                  
                  selectizeInput(
@@ -71,26 +71,29 @@ mod_AdaptativeSelection_ui <- function(id) {
                    choices = NULL
                  ),
                  
-                 splitLayout(
-                   selectizeInput(
-                     inputId = ns("tf"),
-                     label = "Transcription factor",
-                     choices = NULL,
-                     multiple = TRUE
-                   ),
-                   p("OR"),
+                 tags$hr(),
+                 
+                 selectizeInput(
+                   inputId = ns("tf"),
+                   label = "Transcription factor",
+                   choices = NULL,
+                   multiple = TRUE
+                 ),
+                 
+                 
+                  tags$div("OR"),
+                 
+                 tags$br(),
                    
-                  fileWimtrap(
+                  WimtrapWeb:::fileWimtrap(
                      inputId = ns("pwm"),
-                     label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
+                     label = tags$div("PWM file", "(.meme, .pfm, .jaspar,", tags$br(), ".transfac, .motif, or cis-bp format)"),
                      accept = c(".meme", ".pfm", ".jaspar", ".transfac",
                                 ".motif", ".txt"),
                      multiple = TRUE
                    ),
                    
-                   cellWidths = c("45%", "10%", "45%")
-                   
-                 ),
+                 tags$hr(),
                  
                  sliderInput(
                    inputId = ns("score_threshold"),
@@ -100,18 +103,33 @@ mod_AdaptativeSelection_ui <- function(id) {
                    value = 0.86
                  ),
                  
+
                  actionButton(
                    inputId = ns("submit"),
                    label = "Submit",
                    icon = icon("leaf")
-                 )
+                 ),
+                 
+                 tags$h2("Prediction score"),
+                 tags$div(
+                   "The prediction score is the numeric value output by the model for each candidate TFBS. This value is comprised
+                          between 0 and 1. A threshold needs to be set to convert the numeric predictions into binary predictions (transcription
+                          factor binding sites or not). If the prediction score is superior to the threshold, then the candidate is predicted
+                          as a TFBS. Otherwise, it is not. Higher is set the threshold, more specific are the predictions. Lower is set the
+                          threshold, more sensitive are the predictions. The best balance between sensitivity and specificity for predicting
+                          TFBS is obtained with a threshold of 0.5; for inferring target genes from the predicted TFBS, it is obtained with a
+                          threshold of 0.86."),
              ),
                
                mainPanel(
-                 downloadButton(ns("downloadData1"), "Download CARE predictions"),
+                 downloadButton(ns("downloadData1"), "Download TFBS predictions"),
                  
                  downloadButton(ns("downloadData2"), "Download Target predictions"),
                  br(),
+                 tags$div("N.B.: Genomic coordinates are expressed according to the following
+                          assemblies: TAIR10 (", tags$i("Arabidopsis thaliana"), "), SL3.0 (",
+                          tags$i("Solanum lycopersicum"), "), IRGSP-1.0 (", tags$i("Oryza sativa"),
+                          "), and Zm-B73-REFERENCE-NAM-5.0 (", tags$i("Zea mays"), ")."),
                 dataTableOutput(ns(
                  "CAREpredictions"
                )),
@@ -120,7 +138,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                  "Targetpredictions"
                )))
              )),
-    tabPanel("Build",
+    tabPanel("Build custom models",
              sidebarLayout(
                sidebarPanel(
                  tags$style(
@@ -132,9 +150,9 @@ mod_AdaptativeSelection_ui <- function(id) {
                  ),
                  
                  tags$div(id= "fieldset",
-                          fileWimtrap(
+                          WimtrapWeb:::fileWimtrap(
                             inputId = ns("pwmb"),
-                            label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
+                            label = tags$div("PWM file", "(.meme, .pfm, .jaspar,", tags$br(), ".transfac, .motif, or cis-bp format)"),
                             accept = c(".meme", ".pfm", ".jaspar", ".transfac",
                                        ".motif", ".txt"),
                             multiple = TRUE
@@ -142,7 +160,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                           ),
                  br(),
                  tags$div(id = "fieldset",
-                          fileWimtrap(
+                          WimtrapWeb:::fileWimtrap(
                             inputId = ns("filesChIP"),
                             label = tags$div(
                               "TF ChIP-peaks data (.bed* or .narrowPeak)",
@@ -164,7 +182,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                           ),
                  br(),
                  tags$div(id = "fieldset",
-                   fileWimtrap(
+                   WimtrapWeb:::fileWimtrap(
                      inputId = ns("filesData"),
                      label = tags$div(
                        "Genomic data (.bed** or .gtf)",
@@ -217,42 +235,11 @@ mod_AdaptativeSelection_ui <- function(id) {
                  actionButton(inputId = ns("build"),
                               label = "Build!",
                               icon = icon("leaf")),
-                 
                  tags$h2("Demo"),
-                 tags$br(),
-                 tags$div("Please download the ", 
-                          tags$a(href = "https://github.com/RiviereQuentin/carepat", "carepat github repository"),
-                          " (click Code -> Download ZIP) and browse to the \'demo\' folder. Then, we invite you to follow the instructions from the tutorial video.",
-                          tags$br(),
-                          tags$h4("Application cases considered:"),
-                          tags$ul(
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
-                                  in the ", tags$b("same condition"), " (in the organism 1)"),
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
-                                  in the ", tags$b("condition2"), " (in the organism 1)"),
-                          ),
-                          tags$h4("TFs identified to build the model:"),
-                          tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ", 
-                          tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM 
-                          and location of ChIP-peaks in BED3 or narrowPeak",
-                          tags$h4("TF considered for making predictions:"),
-                          "-> ", tags$b("TFexample3"), " => PWM in PFM",
-                          tags$h4("Predictive features:"),
-                          tags$ul(
-                            tags$li("-> ", tags$b("Pattern-macthing"), " results => Genome sequence in FASTA"),
-                            tags$li("-> ", tags$b("Overlap"), " of the TFBS candidates with ", tags$b("promoter,
-                                    proximal promoter, cds, intron, 5\'UTR, 3\'UTR or downstream regions"), " => BED6")
-                          ),
-                         "+ On windows of 20, 400 and 1000bp centered around the TFBS candidates:",
-                         tags$ul(
-                           tags$li("-> Average ", tags$b("density"), " of conserved elements (", tags$b("CE"),") -> BED3"),
-                           tags$li("-> Average digital genomic footprint (", tags$b("DGF"), ") ", tags$b("score"), " -> BED6"),
-                           tags$li("-> Average DNAseI hypersensitivity (", tags$b("DHS"), ") ", tags$b("score"), " -> BED6")
-                         )
-                         
-                          
-              
-               )),
+                 tags$div(
+                   "Please browse to the Demo tab and find the instructions to run the demo example.")
+                 
+                 ),
                
                mainPanel(
                  downloadButton(ns("downloadModel"), "Download TFBS model"),
@@ -286,10 +273,10 @@ mod_AdaptativeSelection_ui <- function(id) {
                )
              )),
     
-    tabPanel("Predict",
+    tabPanel("Use custom models",
              sidebarLayout(
                sidebarPanel(
-                 fileWimtrap(
+                 WimtrapWeb:::fileWimtrap(
                    inputId = ns("pwmc"),
                    label = "PWM file (.meme, .pfm, .jaspar, .transfac, .motif, or cis-bp format)",
                    accept = c(".meme", ".pfm", ".jaspar", ".transfac",
@@ -319,7 +306,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                  conditionalPanel(
                    condition = "input.checkc3 == true",
                    tags$div(id = "fieldset",
-                            fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("TFBSmodel"),
                               label = "TFBS model (.Rdata,  .rda)",
                               accept = c(".RData", ".rda"),
@@ -338,7 +325,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                    
                    tags$div(id = "fieldset",
                             
-                            fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("genomec"),
                               label = "Genomic sequence (.fasta, .fa. fasta.gzip, fa.gzip)",
                               accept = c(".fa", ".fasta", ".fa.gzip", ".fasta.gzip")
@@ -347,13 +334,13 @@ mod_AdaptativeSelection_ui <- function(id) {
                             tags$div(id = 'placeholder4'),
                             
                             
-                            fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("tssc"),
                               label = "Location of TSSs (.bed)",
                               accept = ".bed"
                             ),
                             
-                            fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("ttsc"),
                               label = "Location of TTSs (.bed)",
                               accept = ".bed"
@@ -365,7 +352,7 @@ mod_AdaptativeSelection_ui <- function(id) {
                  conditionalPanel(
                    condition = "input.checkc2 == true",
                    tags$div(id = "fieldset",
-                            fileWimtrap(
+                            WimtrapWeb:::fileWimtrap(
                               inputId = ns("TFBSmodelc"),
                               label = "TFBS model (.RData,  .rda)",
                               accept = c(".RData", ".rda"),
@@ -434,42 +421,19 @@ mod_AdaptativeSelection_ui <- function(id) {
                               label = "Predict!",
                               icon = icon("leaf")),
                  
-                 tags$div("Please download the ", 
-                          tags$a(href = "https://github.com/RiviereQuentin/carepat", "carepat github repository"),
-                          " (click Code -> Download ZIP) and browse to the \'demo\' folder. Then, we invite you to follow the instructions from the tutorial video.",
-                          tags$br(),
-                          tags$h4("Application cases considered:"),
-                          tags$ul(
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
-                                  in the ", tags$b("same condition"), " (in the organism 1)"),
-                            tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
-                                  in the ", tags$b("condition2"), " (in the organism 1)"),
-                          ),
-                          tags$h4("TFs identified to build the model:"),
-                          tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ", 
-                          tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM 
-                          and location of ChIP-peaks in BED3 or narrowPeak",
-                 tags$h4("TF considered for making predictions:"),
-                 "-> ", tags$b("TFexample3"), " => PWM in PFM",
-                 tags$h4("Predictive features:"),
-                 tags$ul(
-                   tags$li("-> ", tags$b("Pattern-macthing"), " results => Genome sequence in FASTA"),
-                   tags$li("-> ", tags$b("Overlap"), " of the TFBS candidates with ", tags$b("promoter,
-                                    proximal promoter, cds, intron, 5\'UTR, 3\'UTR or downstream regions"), " => BED6")
-                 ),
-                 "+ On windows of 20, 400 and 1000bp centered around the TFBS candidates:",
-                 tags$ul(
-                   tags$li("-> Average ", tags$b("density"), " of conserved elements (", tags$b("CE"),") -> BED3"),
-                   tags$li("-> Average digital genomic footprint (", tags$b("DGF"), ") ", tags$b("score"), " -> BED6"),
-                   tags$li("-> Average DNAseI hypersensitivity (", tags$b("DHS"), ") ", tags$b("score"), " -> BED6")
-                 )
-                 
-                 
-                 
-               )
-                 
-                 
-                
+                 tags$h2("Demo"),
+                 tags$div(
+                   "Please browse to the Demo tab and find the instructions to run the demo example."),
+                 tags$br(),
+                 tags$h2("Prediction score"),
+                 tags$div(
+                 "The prediction score is the numeric value output by the model for each candidate TFBS. This value is comprised
+                          between 0 and 1. A threshold needs to be set to convert the numeric predictions into binary predictions (transcription
+                          factor binding sites or not). If the prediction score is superior to the threshold, then the candidate is predicted
+                          as a TFBS. Otherwise, it is not. Higher is set the threshold, more specific are the predictions. Lower is set the
+                          threshold, more sensitive are the predictions. The best balance between sensitivity and specificity for predicting
+                          TFBS is obtained with a threshold of 0.5; for inferring target genes from the predicted TFBS, it is obtained with a
+                          threshold of 0.86.")
                   
                ),
                
@@ -486,7 +450,48 @@ mod_AdaptativeSelection_ui <- function(id) {
                dataTableOutput(ns(
                  "Targetpredictions2"
                )))
-               ))
+               )),
+    
+    tabPanel(title = "Demo",
+             mainPanel(
+               tags$h2("Demo"),
+               tags$br(),
+               tags$div("Please download the ", 
+                        tags$a(href = "https://github.com/RiviereQuentin/carepat", "carepat github repository"),
+                        " (click Code -> Download ZIP) and browse to the \'demo\' folder. Then, we invite you to follow the instructions from the tutorial video.",
+                        tags$br(),
+                        tags$h4("Application cases considered:"),
+                        tags$ul(
+                          tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
+                                  in the ", tags$b("same condition"), " (in the organism 1)"),
+                          tags$li("->", tags$b("Training"), " from data obtained in the ", tags$b("condition 1"), " and predictions 
+                                  in the ", tags$b("condition2"), " (in the organism 1)"),
+                        ),
+                        tags$h4("TFs identified to build the model:"),
+                        tags$b("TFexample1"), " and ", tags$b("TFexample2"), ", studied by ", 
+                        tags$b("ChIP-seq"), " in the ", tags$b("condition1"), " => PWMs in PFM 
+                          and location of ChIP-peaks in BED3 or narrowPeak",
+                        tags$h4("TF considered for making predictions:"),
+                        "-> ", tags$b("TFexample3"), " => PWM in PFM",
+                        tags$h4("Predictive features:"),
+                        tags$ul(
+                          tags$li("-> ", tags$b("Pattern-macthing"), " results => Genome sequence in FASTA"),
+                          tags$li("-> ", tags$b("Overlap"), " of the TFBS candidates with ", tags$b("promoter,
+                                    proximal promoter, cds, intron, 5\'UTR, 3\'UTR or downstream regions"), " => BED6")
+                        ),
+                        "+ On windows of 20, 400 and 1000bp centered around the TFBS candidates:",
+                        tags$ul(
+                          tags$li("-> Average ", tags$b("density"), " of conserved elements (", tags$b("CE"),") -> BED3"),
+                          tags$li("-> Average digital genomic footprint (", tags$b("DGF"), ") ", tags$b("score"), " -> BED6"),
+                          tags$li("-> Average DNAseI hypersensitivity (", tags$b("DHS"), ") ", tags$b("score"), " -> BED6")
+                        )
+                        
+                        
+                        
+               )
+               ,
+               width = 12
+             ))
   ))
 }
 
@@ -535,9 +540,9 @@ mod_AdaptativeSelection_server <- function(id) {
         return(data.table::data.table(NULL))
       show_modal_spinner(spin = "cube-grid",
                          color = "#428bca",
-                         text = "Please wait...")
+                         text = "Please wait 5-10 min...")
       
-      results <- carepat(
+      results <- Wimtrap::carepat(
         organism = input$organism,
         condition = input$condition,
         pfm = input$pwm$datapath,
@@ -580,7 +585,7 @@ mod_AdaptativeSelection_server <- function(id) {
     
     output$downloadData1 <- downloadHandler(
       filename = function() {
-        paste("CARE_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
+        paste("TFBS_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
       },
       content = function(file) {
         write.table(CARE_predictions(),
@@ -630,7 +635,7 @@ mod_AdaptativeSelection_server <- function(id) {
         } else {
         tags$div(
           id = "fieldset",
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("genome"),
             label = "Genomic sequence (.fasta, .fa, .fasta.gzip, .fa.gzip)",
             accept = c(".fa", ".fasta", ".fa.gzip", ".fasta.gzip")
@@ -648,25 +653,25 @@ mod_AdaptativeSelection_server <- function(id) {
             value = 500
           ),
           
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("x5utr"),
             label = "Location of 5'UTRs (.bed***) (facultative)",
             accept = ".bed"
           ),
           
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("cds"),
             label = "Location of coding sequences (.bed***) (facultative)",
             accept = ".bed"
           ),
           
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("intron"),
             "Location of introns (.bed***) (facultative)",
             accept = ".bed"
           ),
           
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("x3Utr"),
             label = "Location of 3'UTRs (.bed***) (facultative)",
             accept = ".bed"
@@ -678,13 +683,13 @@ mod_AdaptativeSelection_server <- function(id) {
             value = 1000
           ),
           
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("tss"),
             label = "Location of TSSs (.bed***)",
             accept = ".bed"
           ),
           
-          fileWimtrap(
+          WimtrapWeb:::fileWimtrap(
             inputId = ns("tts"),
             label = "Location of TTSs (.bed***)",
             accept = ".bed"
@@ -745,7 +750,7 @@ mod_AdaptativeSelection_server <- function(id) {
     Wimtrap_model <- eventReactive(input$build, {
       shinybusy::show_modal_spinner(spin = "cube-grid",
                                     color = "#428bca",
-                                    text = "Please wait...")
+                                    text = "Please wait 20-60 min...")
       bed_data <- reactiveValuesToList(input)
       bed_data <-
         bed_data[grep(pattern = "bed", x = names(bed_data))]
@@ -813,7 +818,7 @@ mod_AdaptativeSelection_server <- function(id) {
       ChIPpeaks.carepat <- as.character(input$filesChIP$datapath)
       names(ChIPpeaks.carepat) <- TFnames.carepat
       model.carepat <-
-        buildTFBSmodel(TFBSdata = TFBSdata.carepat,
+        WimtrapWeb:::buildTFBSmodel(TFBSdata = TFBSdata.carepat,
                                       ChIPpeaks = ChIPpeaks.carepat)
       shinybusy::remove_modal_spinner()
       return(model.carepat)
@@ -1023,10 +1028,10 @@ mod_AdaptativeSelection_server <- function(id) {
     observeEvent(input$predict,{
       show_modal_spinner(spin = "cube-grid",
                          color = "#428bca",
-                         text = "Please wait...")
+                         text = "Please wait 5-10 min...")
       
       if (input$checkc1) {
-        print("Alexandra")
+        message("Alexandra")
         if (is.null(input$organismb)){
           predictiveModel <- Wimtrap_model2
           bed_data <- reactiveValuesToList(input)
@@ -1224,7 +1229,7 @@ mod_AdaptativeSelection_server <- function(id) {
     
     output$downloadData3 <- downloadHandler(
       filename = function() {
-        paste("CARE_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
+        paste("TFBS_", Sys.Date(), "_", Sys.time(), ".tsv", sep = "")
       },
       content = function(file) {
         write.table(CARE_predictions2$data,
