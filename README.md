@@ -23,8 +23,10 @@ models and use them for any other condition and organism.
 
 ## Installation
 
-Wimtrap is an R Shiny Application that requires the last version of R (R
+WimtrapWeb is an R Shiny Application that requires the last version of R (R
 4.0.4), BiocManager and remotes to be installed.
+
+*Important: the installation of WimtrapWeb might take up to 1h if all the packages on which it depends need also to be installed.*
 
 In R, type the following lines:
 

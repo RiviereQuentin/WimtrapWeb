@@ -25,6 +25,7 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.20")
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
+RUN Rscript -e 'package.dir <- system.file(package = "Wimtrap");utils::download.file(url = "https://github.com/RiviereQuentin/carepat/archive/main.zip",destfile = paste0(package.dir, "/carepat.zip" ),timeout = 600,quiet = FALSE);utils::unzip(zipfile = paste0(package.dir, "/carepat.zip"),exdir = package.dir)'
 RUN Rscript -e 'options(repos = BiocManager::repositories());BiocManager::install("RiviereQuentin/WimtrapWeb", dependencies = TRUE, build_vignettes = FALSE, force = TRUE)'
 RUN rm -rf /build_zone
 CMD R -e "options(shiny.host='0.0.0.0');library(WimtrapWeb);run_app()"
